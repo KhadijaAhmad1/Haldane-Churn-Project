@@ -975,7 +975,7 @@
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">Overview</div>
       <div style="display:flex;gap:10px;align-items:center">
-        <span style="font-size:12px;color:var(--muted)">KTP Associate Project · Queen's University Belfast × Haldane Group</span>
+        <span style="font-size:12px;color:var(--muted)">KTP Associate Project · Queen's University Belfast × Haldane Group by Khadija Ahmad</span>
       </div>
     </div>
 
@@ -1039,7 +1039,7 @@
               <div style="font-size:13px;color:var(--muted)">Random Forest trained on 3,150 telecom subscribers. Predicts churn weekly and flags at-risk accounts for retention teams.</div>
             </div>
             <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
-              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">GenAI (Claude)</div>
+              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">GenAI </div>
               <div style="font-size:13px;color:var(--muted)">Translates ML outputs into plain-English risk reports, personalised subscriber emails, and retention strategies for account managers.</div>
             </div>
             <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
@@ -1520,7 +1520,7 @@ Be concise, practical, and data-grounded. Always translate insights into actions
     document.getElementById(typingId).innerHTML = '<div class="md-body"><p>'+md(reply)+'</p></div>';
   }catch(e){
     const errEl = document.getElementById(typingId);
-    if(errEl) errEl.innerHTML = `<span style="color:var(--red)">⚠ ${e.message}${e.message?.includes('fetch')||e.message?.includes('network')?' — try Claude provider or serve via localhost':''}</span>`;
+    if(errEl) errEl.innerHTML = `<span style="color:var(--red)">⚠ ${e.message}${e.message?.includes('fetch')||e.message?.includes('network')?' — try Claude or GPT provider or serve via localhost':''}</span>`;
   }
   win.scrollTop = win.scrollHeight;
 }
@@ -1580,7 +1580,7 @@ function renderError(el, e){
     <p>This is likely a <strong>CORS / network error</strong>. When opening the file directly from your computer (<code>file://</code>), some AI providers block browser requests.</p>
     <p><strong>Fix — pick one:</strong></p>
     <ul>
-      <li class="ul-item"><span class="li-bull">—</span><span><strong>Use Claude (Anthropic)</strong> — it explicitly allows browser calls with the <code>anthropic-dangerous-direct-browser-access</code> header. Switch provider in the sidebar.</span></li>
+      <li class="ul-item"><span class="li-bull">—</span><span><strong>Use Claude or GPT (Anthropic)</strong> — it explicitly allows browser calls with the <code>anthropic-dangerous-direct-browser-access</code> header. Switch provider in the sidebar.</span></li>
       <li class="ul-item"><span class="li-bull">—</span><span><strong>Use a local server</strong> — run <code>python -m http.server 8080</code> in the project folder, then open <code>http://localhost:8080/frontend/index.html</code></span></li>
       <li class="ul-item"><span class="li-bull">—</span><span><strong>Deploy to GitHub Pages</strong> — push to GitHub, enable Pages, and all providers will work from an <code>https://</code> URL.</span></li>
     </ul>` : ''}
