@@ -1,4 +1,3 @@
-<!-- This is the main HTML file for the Haldane Group AI Customer Retention Hub frontend -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Haldane Group — AI Customer Retention Hub</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<!-- Embedded CSS styles for the application -->
 <style>
   :root {
     --navy:   #0F1F35;
@@ -632,26 +630,223 @@
   }
   .li-bull { font-size: 14px; color: var(--orange); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
 
-  /* ── RESPONSIVE ── */
+  /* ── MOBILE BOTTOM NAV ── */
+  .mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    z-index: 200;
+    padding: 0;
+    safe-area-inset-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .mob-nav-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 4px;
+    border: none;
+    background: none;
+    color: rgba(255,255,255,0.5);
+    font-size: 9px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color .15s;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+
+  .mob-nav-btn.active { color: var(--orange-l); }
+  .mob-nav-btn:hover  { color: rgba(255,255,255,0.85); }
+
+  .mob-nav-icon {
+    font-size: 17px;
+    line-height: 1;
+  }
+
+  /* Mobile topbar extras */
+  .mob-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: var(--navy);
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+  }
+
+  /* Mobile API connect banner */
+  .mob-api-banner {
+    display: none;
+    background: #FFF7ED;
+    border-bottom: 1px solid #FED7AA;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #92400E;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .mob-api-banner button {
+    background: var(--orange);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* ── TABLET (900px) ── */
   @media (max-width: 900px) {
     .sidebar { width: 220px; }
     .main { margin-left: 220px; }
     .metric-row { grid-template-columns: 1fr 1fr; }
     .form-grid-3 { grid-template-columns: 1fr 1fr; }
+    .topbar { padding: 12px 20px; }
+    .content { padding: 24px 20px; }
   }
 
+  /* ── MOBILE (680px) ── */
   @media (max-width: 680px) {
+
+    /* Hide desktop sidebar */
     .sidebar { display: none; }
-    .main { margin-left: 0; }
-    .metric-row { grid-template-columns: 1fr 1fr; }
-    .form-grid { grid-template-columns: 1fr; }
+
+    /* Main fills full width, adds bottom padding for nav bar */
+    .main {
+      margin-left: 0;
+      padding-bottom: 64px;
+    }
+
+    /* Topbar adjustments */
+    .topbar {
+      padding: 10px 16px;
+      gap: 8px;
+    }
+
+    .topbar-title { font-size: 16px; }
+
+    /* Hide long subtitle in topbar on mobile */
+    .topbar > div > span { display: none; }
+
+    /* Show mobile nav */
+    .mobile-nav { display: block; }
+
+    /* Show mobile API banner when not connected */
+    .mob-api-banner { display: flex; }
+
+    /* Content padding */
+    .content { padding: 16px; }
+
+    /* Section headings */
+    .section-title { font-size: 20px; }
+    .section-sub   { font-size: 13px; margin-bottom: 18px; }
+
+    /* Metric row — 2 columns on mobile */
+    .metric-row { grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+    .metric-card { padding: 14px; }
+    .metric-value { font-size: 22px; }
+    .metric-label { font-size: 10px; }
+    .metric-note  { font-size: 10px; }
+
+    /* Forms — single column */
+    .form-grid   { grid-template-columns: 1fr; gap: 12px; }
+    .form-grid-3 { grid-template-columns: 1fr; gap: 12px; }
+
+    /* Cards */
+    .card { padding: 16px; margin-bottom: 14px; }
+    .card-title { font-size: 16px; }
+
+    /* Buttons — full width on mobile */
+    .btn-row { flex-direction: column; }
+    .btn-row .btn { width: 100%; justify-content: center; }
+
+    /* Output boxes */
+    .output-box { font-size: 12px; padding: 14px 16px; }
+    .md-body { padding: 14px 16px; }
+    .score-header { padding: 12px 16px; font-size: 13px; }
+
+    /* Modal — full screen on mobile */
+    .modal {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      padding: 24px 20px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .modal-overlay { align-items: flex-end; }
+
+    /* Provider grid — 2 cols */
+    #provider-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+    .provider-btn  { padding: 10px 10px; }
+    .provider-name { font-size: 12px; }
+    .provider-sub  { font-size: 10px; }
+
+    /* Chat */
+    .chat-window { max-height: 260px; }
+    .chat-msg    { font-size: 13px; max-width: 95%; }
+    .chat-input-row { flex-direction: column; gap: 8px; }
+    .chat-input-row .btn { width: 100%; justify-content: center; }
+    .quick-prompts { gap: 6px; }
+    .quick-btn { font-size: 11px; padding: 4px 10px; }
+
+    /* Watchlist */
+    .watchlist-item { gap: 10px; padding: 10px 0; }
+    .avatar { width: 34px; height: 34px; font-size: 11px; }
+    .customer-name { font-size: 13px; }
+    .customer-meta { font-size: 11px; }
+    .risk-pct { font-size: 13px; }
+
+    /* Two column overview layout — stack on mobile */
+    .overview-cols {
+      grid-template-columns: 1fr !important;
+    }
+
+    /* Topbar API pill — hide text, keep dot */
+    .api-pill span:last-child { display: none; }
+
+    /* Input font size 16px prevents iOS zoom on focus */
+    input, select, textarea { font-size: 16px; }
+  }
+
+  /* ── VERY SMALL (380px) ── */
+  @media (max-width: 380px) {
+    .metric-row { grid-template-columns: 1fr; }
+    .metric-value { font-size: 26px; }
+    .section-title { font-size: 18px; }
+    .mob-nav-btn { font-size: 8px; padding: 8px 2px; }
+    .mob-nav-icon { font-size: 15px; }
   }
 </style>
 </head>
-<!-- Main application layout and components -->
 <body>
 
-<!-- Modal for connecting AI provider API key -->
+<!-- API KEY MODAL -->
 <div class="modal-overlay" id="api-modal">
   <div class="modal">
     <div class="modal-title">Connect an AI provider</div>
@@ -693,10 +888,45 @@
   </div>
 </div>
 
-<!-- Main layout container with sidebar and content -->
+<!-- MOBILE API BANNER -->
+<div class="mob-api-banner" id="mob-api-banner">
+  <span>⚡ Connect an AI provider to use all modules</span>
+  <button onclick="document.getElementById('api-modal').style.display='flex'">Connect</button>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<nav class="mobile-nav">
+  <div class="mobile-nav-inner">
+    <button class="mob-nav-btn active" id="mob-btn-overview" onclick="switchPanel('overview',null,'overview')">
+      <span class="mob-nav-icon">◈</span>
+      <span>Overview</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-btn-risk" onclick="switchPanel('risk',null,'risk')">
+      <span class="mob-nav-icon">⚡</span>
+      <span>Risk</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-btn-email" onclick="switchPanel('email',null,'email')">
+      <span class="mob-nav-icon">✉</span>
+      <span>Email</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-btn-offer" onclick="switchPanel('offer',null,'offer')">
+      <span class="mob-nav-icon">◎</span>
+      <span>Offer</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-btn-chat" onclick="switchPanel('chat',null,'chat')">
+      <span class="mob-nav-icon">◇</span>
+      <span>Analyst</span>
+    </button>
+    <button class="mob-nav-btn" id="mob-btn-plan" onclick="switchPanel('plan',null,'plan')">
+      <span class="mob-nav-icon">▸</span>
+      <span>Plan</span>
+    </button>
+  </div>
+</nav>
+
 <div class="layout">
 
-  <!-- Sidebar navigation with tools and stats -->
+  <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-eyebrow">AI Retention Hub</div>
@@ -740,22 +970,21 @@
     </div>
   </aside>
 
-  <!-- Main content area with panels -->
+  <!-- MAIN -->
   <main class="main">
     <div class="topbar">
       <div class="topbar-title" id="topbar-title">Overview</div>
       <div style="display:flex;gap:10px;align-items:center">
-        <span style="font-size:12px;color:var(--muted)">KTP Associate Project · Queen's University Belfast × Haldane Group Author: Khadija Ahmad</span>
+        <span style="font-size:12px;color:var(--muted)">KTP Associate Project · Queen's University Belfast × Haldane Group</span>
       </div>
     </div>
 
-    <!-- Content panels for different tools -->
     <div class="content">
 
-      <!-- Overview panel with metrics and charts -->
+      <!-- OVERVIEW -->
       <div class="panel active" id="panel-overview">
         <div class="section-title">Telecom Customer Churn Intelligence</div>
-        <div class="section-sub">AI-powered tools to predict, understand, and prevent subscriber churn, built for a large telecommunications company facing high customer switching behavior.</div>
+        <div class="section-sub">AI-powered tools to predict, understand, and prevent subscriber churn — built for a large telecommunications company facing high customer attrition.</div>
 
         <div class="metric-row">
           <div class="metric-card danger">
@@ -780,7 +1009,7 @@
           </div>
         </div>
 
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="overview-cols" style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
           <div class="card">
             <div class="card-header">
               <div>
@@ -810,7 +1039,7 @@
               <div style="font-size:13px;color:var(--muted)">Random Forest trained on 3,150 telecom subscribers. Predicts churn weekly and flags at-risk accounts for retention teams.</div>
             </div>
             <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
-              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">GenAI</div>
+              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">GenAI (Claude)</div>
               <div style="font-size:13px;color:var(--muted)">Translates ML outputs into plain-English risk reports, personalised subscriber emails, and retention strategies for account managers.</div>
             </div>
             <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
@@ -1012,13 +1241,20 @@ function saveKey(){
   document.getElementById('api-status-text').textContent = 'API connected';
 }
 
-function switchPanel(id, btn){
+function switchPanel(id, btn, mobId){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.mob-nav-btn').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   if(btn) btn.classList.add('active');
+  // highlight mobile nav button
+  const mId = mobId || id;
+  const mobBtn = document.getElementById('mob-btn-'+mId);
+  if(mobBtn) mobBtn.classList.add('active');
   const titles = {overview:'Overview',risk:'Risk Scanner',email:'Retention Email',offer:'Offer Builder',chat:'AI Analyst',plan:'Action Plan'};
   document.getElementById('topbar-title').textContent = titles[id]||id;
+  // scroll to top on mobile panel switch
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 function requireKey(el){
@@ -1133,6 +1369,9 @@ function saveKey(){
   document.getElementById('api-modal').style.display = 'none';
   document.getElementById('api-status-dot').classList.add('connected');
   document.getElementById('api-status-text').textContent = PROVIDERS[ACTIVE_PROVIDER].label;
+  // hide mobile banner
+  const banner = document.getElementById('mob-api-banner');
+  if(banner) banner.style.display = 'none';
 }
 
 const DEFAULT_SYSTEM = 'You are an AI analyst for a large telecommunications company facing high customer churn. You help retention teams reduce subscriber churn through data-driven insights. Be specific, actionable, and practical for retention agents and account managers. Use telecom industry terminology.';
@@ -1281,7 +1520,7 @@ Be concise, practical, and data-grounded. Always translate insights into actions
     document.getElementById(typingId).innerHTML = '<div class="md-body"><p>'+md(reply)+'</p></div>';
   }catch(e){
     const errEl = document.getElementById(typingId);
-    if(errEl) errEl.innerHTML = `<span style="color:var(--red)">⚠ ${e.message}${e.message?.toLowerCase().includes('fetch')||e.message?.toLowerCase().includes('network') ? ' — try another provider or serve via localhost' : ''}</span>`;
+    if(errEl) errEl.innerHTML = `<span style="color:var(--red)">⚠ ${e.message}${e.message?.includes('fetch')||e.message?.includes('network')?' — try Claude provider or serve via localhost':''}</span>`;
   }
   win.scrollTop = win.scrollHeight;
 }
@@ -1341,7 +1580,7 @@ function renderError(el, e){
     <p>This is likely a <strong>CORS / network error</strong>. When opening the file directly from your computer (<code>file://</code>), some AI providers block browser requests.</p>
     <p><strong>Fix — pick one:</strong></p>
     <ul>
-      <li class="ul-item"><span class="li-bull">—</span><span><strong>Use any other provider</strong> — it explicitly allows browser calls with the <code>anthropic-dangerous-direct-browser-access</code> header. Switch provider in the sidebar.</span></li>
+      <li class="ul-item"><span class="li-bull">—</span><span><strong>Use Claude (Anthropic)</strong> — it explicitly allows browser calls with the <code>anthropic-dangerous-direct-browser-access</code> header. Switch provider in the sidebar.</span></li>
       <li class="ul-item"><span class="li-bull">—</span><span><strong>Use a local server</strong> — run <code>python -m http.server 8080</code> in the project folder, then open <code>http://localhost:8080/frontend/index.html</code></span></li>
       <li class="ul-item"><span class="li-bull">—</span><span><strong>Deploy to GitHub Pages</strong> — push to GitHub, enable Pages, and all providers will work from an <code>https://</code> URL.</span></li>
     </ul>` : ''}
