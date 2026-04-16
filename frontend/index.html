@@ -1,0 +1,1380 @@
+<!-- This is the main HTML file for the Haldane Group AI Customer Retention Hub frontend -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haldane Group — AI Customer Retention Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!-- Embedded CSS styles for the application -->
+<style>
+  :root {
+    --navy:   #0F1F35;
+    --navy2:  #162844;
+    --blue:   #1A5ECC;
+    --blue-l: #3B7DE8;
+    --orange: #E8671A;
+    --orange-l:#F5884A;
+    --green:  #1E8A50;
+    --red:    #C0392B;
+    --amber:  #D97706;
+    --sand:   #F5F0E8;
+    --sand2:  #EDE7DA;
+    --ink:    #1A1A1A;
+    --muted:  #6B6B6B;
+    --border: #D6CFC4;
+    --white:  #FFFFFF;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 2px 12px rgba(15,31,53,0.08);
+    --shadow-lg: 0 8px 40px rgba(15,31,53,0.14);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--sand);
+    color: var(--ink);
+    min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── SIDEBAR LAYOUT ── */
+  .layout { display: flex; min-height: 100vh; }
+
+  .sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: var(--navy);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    z-index: 100;
+    overflow-y: auto;
+  }
+
+  .sidebar-brand {
+    padding: 28px 24px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .brand-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange-l);
+    margin-bottom: 6px;
+  }
+
+  .brand-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    line-height: 1.2;
+    color: #fff;
+  }
+
+  .brand-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+
+  .sidebar-section {
+    padding: 20px 16px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 16px;
+    margin: 1px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.65);
+    transition: all .15s;
+    border: none;
+    background: none;
+    width: calc(100% - 16px);
+    text-align: left;
+  }
+
+  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+  .nav-item.active { background: rgba(232,103,26,0.2); color: var(--orange-l); }
+
+  .nav-icon {
+    width: 18px; height: 18px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; flex-shrink: 0;
+  }
+
+  .sidebar-stats {
+    margin-top: auto;
+    padding: 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+  }
+
+  .stat-label { font-size: 12px; color: rgba(255,255,255,0.45); }
+  .stat-value { font-size: 13px; font-weight: 600; color: #fff; font-family: 'DM Mono', monospace; }
+  .stat-value.danger { color: #F87171; }
+  .stat-value.success { color: #4ADE80; }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    margin-left: 260px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+  }
+
+  .topbar-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 19px;
+    color: var(--navy);
+  }
+
+  .api-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--sand);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .api-pill:hover { border-color: var(--blue); color: var(--blue); }
+  .api-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--red); }
+  .api-dot.connected { background: var(--green); }
+
+  .content { padding: 32px; flex: 1; }
+
+  .panel { display: none; animation: fadeIn .2s ease; }
+  .panel.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--navy);
+  }
+
+  .card-subtitle {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* ── METRICS ── */
+  .metric-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .metric-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .metric-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .metric-card.danger::before  { background: var(--red); }
+  .metric-card.warning::before { background: var(--amber); }
+  .metric-card.success::before { background: var(--green); }
+  .metric-card.info::before    { background: var(--blue); }
+
+  .metric-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .metric-value {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--navy);
+    line-height: 1;
+  }
+
+  .metric-note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+
+  /* ── FORMS ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input, select, textarea {
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    background: var(--sand);
+    transition: border-color .15s, box-shadow .15s;
+    width: 100%;
+  }
+
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(26,94,204,0.12);
+    background: var(--white);
+  }
+
+  textarea { min-height: 90px; resize: vertical; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--ink);
+  }
+
+  .btn:hover { background: var(--sand); }
+
+  .btn-primary {
+    background: var(--navy);
+    color: #fff;
+    border-color: var(--navy);
+  }
+
+  .btn-primary:hover { background: var(--navy2); }
+
+  .btn-orange {
+    background: var(--orange);
+    color: #fff;
+    border-color: var(--orange);
+  }
+
+  .btn-orange:hover { background: var(--orange-l); }
+
+  .btn-sm { padding: 6px 12px; font-size: 13px; }
+
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+  /* ── OUTPUT ── */
+  .output-box {
+    background: var(--navy);
+    color: #E8EEF8;
+    border-radius: var(--radius-lg);
+    padding: 20px 24px;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    min-height: 80px;
+    max-height: 500px;
+    overflow-y: auto;
+    margin-top: 20px;
+  }
+
+  .output-box.light {
+    background: var(--sand);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+  }
+
+  .output-placeholder { color: rgba(232,238,248,0.3); font-style: italic; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .badge-red    { background: #FEE2E2; color: #991B1B; }
+  .badge-amber  { background: #FEF3C7; color: #92400E; }
+  .badge-green  { background: #D1FAE5; color: #065F46; }
+  .badge-blue   { background: #DBEAFE; color: #1E40AF; }
+
+  /* ── WATCHLIST ── */
+  .watchlist-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--sand2);
+  }
+
+  .watchlist-item:last-child { border-bottom: none; }
+
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--navy2);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .customer-name { font-size: 14px; font-weight: 500; }
+  .customer-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .customer-info { flex: 1; }
+
+  .risk-indicator { text-align: right; flex-shrink: 0; width: 90px; }
+  .risk-pct { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 500; }
+  .risk-bar { height: 4px; border-radius: 2px; background: var(--sand2); margin-top: 5px; overflow: hidden; }
+  .risk-fill { height: 100%; border-radius: 2px; }
+
+  /* ── CHAT ── */
+  .chat-window {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: 4px 0;
+    margin-bottom: 16px;
+  }
+
+  .chat-msg {
+    padding: 12px 16px;
+    border-radius: var(--radius-lg);
+    font-size: 14px;
+    line-height: 1.65;
+    margin-bottom: 10px;
+    max-width: 88%;
+  }
+
+  .msg-user {
+    background: var(--navy);
+    color: #fff;
+    margin-left: auto;
+  }
+
+  .msg-ai {
+    background: var(--sand);
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+
+  .chat-input-row { display: flex; gap: 10px; align-items: flex-end; }
+  .chat-input-row textarea { flex: 1; min-height: 56px; max-height: 140px; }
+
+  .quick-prompts { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+  .quick-btn {
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--white);
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .quick-btn:hover { border-color: var(--blue); color: var(--blue); background: #EFF6FF; }
+
+  /* ── SPINNER ── */
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  .spinner.dark {
+    border-color: rgba(15,31,53,0.2);
+    border-top-color: var(--navy);
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── API KEY MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(15,31,53,0.55);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000;
+  }
+
+  .modal {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 32px;
+    width: 480px;
+    max-width: 95vw;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .modal-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+
+  .modal-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+
+  .key-note {
+    background: #FFF7ED;
+    border: 1px solid #FED7AA;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    font-size: 13px;
+    color: #92400E;
+    margin-top: 12px;
+  }
+
+  /* ── SECTION HEADING ── */
+  .section-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    color: var(--navy);
+    margin-bottom: 6px;
+  }
+
+  .section-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--sand2); margin: 20px 0; }
+
+  /* ── OVERVIEW TAGS ── */
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+  .tag {
+    padding: 4px 12px;
+    background: var(--sand2);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .provider-btn {
+    display: flex; flex-direction: column; align-items: flex-start;
+    padding: 10px 14px; border: 1px solid var(--border);
+    border-radius: var(--radius); background: var(--white);
+    cursor: pointer; transition: all .15s; font-family: 'DM Sans', sans-serif;
+    text-align: left;
+  }
+  .provider-btn:hover { border-color: var(--navy); }
+  .provider-btn.active { border-color: var(--navy); border-width: 2px; background: #EEF2F8; }
+  .provider-name { font-size: 13px; font-weight: 600; color: var(--navy); }
+  .provider-sub  { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── MARKDOWN RENDERED OUTPUT ── */
+  .md-output {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ink);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    overflow: hidden;
+  }
+  .score-header {
+    background: var(--navy);
+    color: #fff;
+    padding: 14px 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.03em;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+  .score-header strong { color: var(--orange-l); font-size: 18px; }
+  .md-body { padding: 20px 24px; max-height: 520px; overflow-y: auto; }
+  .md-body p { margin: 0 0 12px; color: var(--ink); }
+  .md-body p:last-child { margin-bottom: 0; }
+  .md-body h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px; color: var(--navy);
+    margin: 20px 0 8px; padding-bottom: 6px;
+    border-bottom: 2px solid var(--sand2);
+  }
+  .md-body h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px; color: var(--navy);
+    margin: 18px 0 8px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .md-body h2::before {
+    content: ''; display: inline-block;
+    width: 4px; height: 18px;
+    background: var(--orange); border-radius: 2px; flex-shrink: 0;
+  }
+  .md-body h3 {
+    font-size: 13px; font-weight: 600; color: var(--navy);
+    text-transform: uppercase; letter-spacing: 0.07em;
+    margin: 16px 0 6px;
+  }
+  .md-body hr { border: none; border-top: 1px solid var(--sand2); margin: 16px 0; }
+  .md-body strong { font-weight: 600; color: var(--navy); }
+  .md-body em { font-style: italic; color: var(--muted); }
+  .md-body code {
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    background: var(--sand); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px; color: var(--navy);
+  }
+  .md-body ol, .md-body ul {
+    list-style: none; padding: 0; margin: 8px 0 14px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .md-body li.ol-item, .md-body li.ul-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    padding: 9px 14px; background: var(--sand);
+    border-radius: var(--radius); font-size: 13.5px; line-height: 1.6;
+  }
+  .md-body li.ol-item { border-left: 3px solid var(--navy); }
+  .md-body li.ul-item { border-left: 3px solid var(--orange); }
+  .li-num {
+    font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 600;
+    color: var(--white); background: var(--navy); border-radius: 50%;
+    width: 20px; height: 20px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0; margin-top: 2px;
+  }
+  .li-bull { font-size: 14px; color: var(--orange); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .sidebar { width: 220px; }
+    .main { margin-left: 220px; }
+    .metric-row { grid-template-columns: 1fr 1fr; }
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 680px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .metric-row { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<!-- Main application layout and components -->
+<body>
+
+<!-- Modal for connecting AI provider API key -->
+<div class="modal-overlay" id="api-modal">
+  <div class="modal">
+    <div class="modal-title">Connect an AI provider</div>
+    <div class="modal-sub">Choose your preferred AI provider and paste your API key. Your key lives only in browser memory — never stored, never sent anywhere except directly to the provider.</div>
+
+    <div class="field" style="margin-bottom:14px">
+      <label>AI Provider</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px" id="provider-grid">
+        <button class="provider-btn active" data-provider="anthropic" onclick="selectProvider('anthropic',this)">
+          <span class="provider-name">Claude</span>
+          <span class="provider-sub">Anthropic</span>
+        </button>
+        <button class="provider-btn" data-provider="openai" onclick="selectProvider('openai',this)">
+          <span class="provider-name">GPT-4o</span>
+          <span class="provider-sub">OpenAI</span>
+        </button>
+        <button class="provider-btn" data-provider="gemini" onclick="selectProvider('gemini',this)">
+          <span class="provider-name">Gemini Flash-Lite</span>
+          <span class="provider-sub">Google (free)</span>
+        </button>
+        <button class="provider-btn" data-provider="groq" onclick="selectProvider('groq',this)">
+          <span class="provider-name">Llama 3.3</span>
+          <span class="provider-sub">Groq (free)</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:10px">
+      <label id="key-label">Anthropic API Key</label>
+      <input type="password" id="api-key-input" placeholder="sk-ant-api03-…" autocomplete="off">
+    </div>
+
+    <div class="key-note" id="key-note">🔒 Key used only in this session. Get yours at <strong>console.anthropic.com</strong></div>
+
+    <div class="btn-row" style="margin-top:20px">
+      <button class="btn btn-primary" onclick="saveKey()">Connect →</button>
+      <button class="btn" onclick="document.getElementById('api-modal').style.display='none'">Skip for now</button>
+    </div>
+  </div>
+</div>
+
+<!-- Main layout container with sidebar and content -->
+<div class="layout">
+
+  <!-- Sidebar navigation with tools and stats -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-eyebrow">AI Retention Hub</div>
+      <div class="brand-name">TeleRetain AI</div>
+      <div class="brand-sub">Telecom Churn Analytics Platform</div>
+    </div>
+
+    <div class="sidebar-section">Tools</div>
+    <button class="nav-item active" onclick="switchPanel('overview', this)">
+      <span class="nav-icon">◈</span> Overview
+    </button>
+    <button class="nav-item" onclick="switchPanel('risk', this)">
+      <span class="nav-icon">⚡</span> Risk Scanner
+    </button>
+    <button class="nav-item" onclick="switchPanel('email', this)">
+      <span class="nav-icon">✉</span> Retention Email
+    </button>
+    <button class="nav-item" onclick="switchPanel('offer', this)">
+      <span class="nav-icon">◎</span> Offer Builder
+    </button>
+    <button class="nav-item" onclick="switchPanel('chat', this)">
+      <span class="nav-icon">◇</span> AI Analyst
+    </button>
+    <button class="nav-item" onclick="switchPanel('plan', this)">
+      <span class="nav-icon">▸</span> Action Plan
+    </button>
+
+    <div class="sidebar-section">Data Snapshot</div>
+    <div style="padding:0 16px 8px">
+      <div class="stat-row"><span class="stat-label">Total customers</span><span class="stat-value">3,150</span></div>
+      <div class="stat-row"><span class="stat-label">Churn rate</span><span class="stat-value danger">15.7%</span></div>
+      <div class="stat-row"><span class="stat-label">Model ROC-AUC</span><span class="stat-value success">0.984</span></div>
+      <div class="stat-row"><span class="stat-label">At-risk (high)</span><span class="stat-value danger">38</span></div>
+    </div>
+
+    <div class="sidebar-stats">
+      <button class="api-pill" style="width:100%;justify-content:center" onclick="document.getElementById('api-modal').style.display='flex'">
+        <span class="api-dot" id="api-status-dot"></span>
+        <span id="api-status-text">Connect AI provider</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main content area with panels -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title" id="topbar-title">Overview</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span style="font-size:12px;color:var(--muted)">KTP Associate Project · Queen's University Belfast × Haldane Group Author: Khadija Ahmad</span>
+      </div>
+    </div>
+
+    <!-- Content panels for different tools -->
+    <div class="content">
+
+      <!-- Overview panel with metrics and charts -->
+      <div class="panel active" id="panel-overview">
+        <div class="section-title">Telecom Customer Churn Intelligence</div>
+        <div class="section-sub">AI-powered tools to predict, understand, and prevent subscriber churn, built for a large telecommunications company facing high customer switching behavior.</div>
+
+        <div class="metric-row">
+          <div class="metric-card danger">
+            <div class="metric-label">Churn Rate</div>
+            <div class="metric-value">15.7%</div>
+            <div class="metric-note">495 of 3,150 subscribers churned</div>
+          </div>
+          <div class="metric-card warning">
+            <div class="metric-label">High-Risk Subscribers</div>
+            <div class="metric-value">38</div>
+            <div class="metric-note">Churn probability &gt; 70%</div>
+          </div>
+          <div class="metric-card info">
+            <div class="metric-label">Model Accuracy</div>
+            <div class="metric-value">0.984</div>
+            <div class="metric-note">ROC-AUC · Random Forest</div>
+          </div>
+          <div class="metric-card success">
+            <div class="metric-label">Recall (Churners)</div>
+            <div class="metric-value">94.9%</div>
+            <div class="metric-note">Churners correctly identified</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Top churn predictors</div>
+                <div class="card-subtitle">Random Forest feature importance</div>
+              </div>
+            </div>
+            <div id="feature-chart"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">High-risk subscriber watchlist</div>
+                <div class="card-subtitle">Subscribers requiring immediate outreach</div>
+              </div>
+            </div>
+            <div id="watchlist-overview"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title" style="margin-bottom:12px">How AI is used in this project</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+            <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
+              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">ML Prediction</div>
+              <div style="font-size:13px;color:var(--muted)">Random Forest trained on 3,150 telecom subscribers. Predicts churn weekly and flags at-risk accounts for retention teams.</div>
+            </div>
+            <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
+              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">GenAI</div>
+              <div style="font-size:13px;color:var(--muted)">Translates ML outputs into plain-English risk reports, personalised subscriber emails, and retention strategies for account managers.</div>
+            </div>
+            <div style="background:var(--sand);border-radius:var(--radius);padding:16px">
+              <div style="font-weight:600;color:var(--navy);margin-bottom:6px;font-size:14px">Automation</div>
+              <div style="font-size:13px;color:var(--muted)">Retention teams get weekly at-risk subscriber lists. AI drafts outreach. Agents review and send — full loop in under 5 minutes.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RISK SCANNER -->
+      <div class="panel" id="panel-risk">
+        <div class="section-title">Subscriber Risk Scanner</div>
+        <div class="section-sub">Enter a subscriber's usage profile to get an AI-generated churn risk assessment and recommended retention actions.</div>
+
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label>Call failures (past year)</label><input type="number" id="r-calls" value="8" min="0" max="99"></div>
+            <div class="field"><label>Filed complaint?</label><select id="r-complain"><option value="0">No</option><option value="1">Yes</option></select></div>
+            <div class="field"><label>Subscription length (months)</label><input type="number" id="r-sublen" value="18" min="1" max="60"></div>
+            <div class="field"><label>Account status</label><select id="r-status"><option value="1">Active</option><option value="2">Inactive</option></select></div>
+            <div class="field"><label>Tariff plan</label><select id="r-tariff"><option value="1">Pay-as-you-go</option><option value="2">Contract</option></select></div>
+            <div class="field"><label>Annual customer value (£)</label><input type="number" id="r-value" value="320" min="0"></div>
+            <div class="field"><label>Call frequency (calls/year)</label><input type="number" id="r-freq" value="45" min="0"></div>
+            <div class="field"><label>Age group (1=youngest, 5=oldest)</label><input type="number" id="r-age" value="2" min="1" max="5"></div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="runRiskScan()">Analyse risk →</button>
+          </div>
+          <div class="output-box" id="risk-output"><span class="output-placeholder">Risk assessment will appear here…</span></div>
+        </div>
+      </div>
+
+      <!-- RETENTION EMAIL -->
+      <div class="panel" id="panel-email">
+        <div class="section-title">Retention Email Generator</div>
+        <div class="section-sub">Generate a personalised email from the account manager to an at-risk subscriber. Not a template — genuinely tailored to their usage and concern.</div>
+
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label>Subscriber name</label><input type="text" id="e-name" value="James Morrison"></div>
+            <div class="field"><label>Subscriber type</label><select id="e-type"><option>Pay-as-you-go</option><option>Contract (monthly)</option><option>Contract (annual)</option><option>Business account</option></select></div>
+            <div class="field"><label>Primary concern</label><select id="e-concern"><option>Network coverage</option><option>Call quality / dropped calls</option><option>Pricing / bill shock</option><option>Data speed</option><option>Complaint unresolved</option><option>Better deal elsewhere</option></select></div>
+            <div class="field"><label>Churn risk score (%)</label><input type="number" id="e-risk" value="78" min="0" max="100"></div>
+            <div class="field"><label>Key services used</label><input type="text" id="e-products" value="Voice, Data, International calls"></div>
+            <div class="field"><label>Region / area</label><select id="e-branch"><option>Northern Ireland</option><option>Republic of Ireland</option><option>Isle of Man</option><option>North West England</option><option>London</option></select></div>
+          </div>
+          <div class="field" style="margin-top:16px"><label>Email tone</label>
+            <select id="e-tone"><option>Professional and warm</option><option>Urgent and personal</option><option>Concise and direct</option></select>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="generateEmail()">Generate email →</button>
+          </div>
+          <div class="output-box light" id="email-output"><span class="output-placeholder" style="color:var(--muted)">Generated email will appear here…</span></div>
+        </div>
+      </div>
+
+      <!-- OFFER BUILDER -->
+      <div class="panel" id="panel-offer">
+        <div class="section-title">Retention Offer Builder</div>
+        <div class="section-sub">Design a targeted retention offer for a specific subscriber segment. AI produces a concrete offer with delivery strategy and success metrics.</div>
+
+        <div class="card">
+          <div class="form-grid">
+            <div class="field"><label>Subscriber segment</label>
+              <select id="o-seg"><option>High-value contract (£50+/mo)</option><option>Medium-value contract</option><option>Pay-as-you-go at risk</option><option>Inactive / low-usage account</option><option>Subscriber with complaint history</option></select>
+            </div>
+            <div class="field"><label>Suspected churn reason</label>
+              <select id="o-reason"><option>Competitor pricing / better deal</option><option>Poor network / call quality</option><option>Data speed or limits</option><option>Unresolved complaint</option><option>Switching to a bundle deal</option><option>Unknown</option></select>
+            </div>
+            <div class="field"><label>Budget for offer</label>
+              <select id="o-budget"><option>Low (free add-ons or data boosts)</option><option>Medium (10–15% bill discount)</option><option>High (plan upgrade or £30+ credit)</option></select>
+            </div>
+            <div class="field"><label>Region</label>
+              <select id="o-branch"><option>Northern Ireland</option><option>Republic of Ireland</option><option>Isle of Man</option><option>North West England</option><option>London</option></select>
+            </div>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="buildOffer()">Design offer →</button>
+          </div>
+          <div class="output-box light" id="offer-output"><span class="output-placeholder" style="color:var(--muted)">Offer package will appear here…</span></div>
+        </div>
+      </div>
+
+      <!-- AI ANALYST CHAT -->
+      <div class="panel" id="panel-chat">
+        <div class="section-title">AI Analyst</div>
+        <div class="section-sub">Chat with an AI analyst that has full context of the telecom churn dataset, model results, and industry best practice.</div>
+
+        <div class="card">
+          <div class="quick-prompts">
+            <button class="quick-btn" onclick="setQ('What are the top 3 reasons subscribers are churning?')">Top churn reasons</button>
+            <button class="quick-btn" onclick="setQ('Which subscriber segment should we prioritise for retention?')">Priority segment</button>
+            <button class="quick-btn" onclick="setQ('How does complaint history affect churn probability in the data?')">Complaint impact</button>
+            <button class="quick-btn" onclick="setQ('Suggest a 30-day retention action plan for the telecom company.')">30-day plan</button>
+            <button class="quick-btn" onclick="setQ('How can we use this churn model in our CRM system day to day?')">CRM integration</button>
+          </div>
+          <div class="chat-window" id="chat-window">
+            <div class="chat-msg msg-ai">Hi — I'm your AI analyst. I have full context on the telecom churn dataset (3,150 subscribers, 15.7% churn, ROC-AUC 0.984). Ask me anything about the data, model results, or how to reduce subscriber churn.</div>
+          </div>
+          <div class="chat-input-row">
+            <textarea id="chat-input" placeholder="Ask about churn drivers, model results, subscriber segments, or retention strategy… (Ctrl+Enter to send)"></textarea>
+            <button class="btn btn-primary" onclick="sendChat()" style="align-self:flex-end">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION PLAN -->
+      <div class="panel" id="panel-plan">
+        <div class="section-title">Strategic Action Plan</div>
+        <div class="section-sub">Generate a structured subscriber retention action plan tailored to your time horizon, resources, and focus area.</div>
+
+        <div class="card">
+          <div class="form-grid-3">
+            <div class="field"><label>Time horizon</label>
+              <select id="ap-horizon"><option>30 days (quick wins)</option><option>90 days (tactical)</option><option>12 months (strategic)</option></select>
+            </div>
+            <div class="field"><label>Subscriber focus</label>
+              <select id="ap-focus"><option>All subscribers</option><option>High-value contract accounts</option><option>Pay-as-you-go subscribers</option><option>Subscribers with complaints</option><option>Inactive / low-usage accounts</option></select>
+            </div>
+            <div class="field"><label>Available resources</label>
+              <select id="ap-res"><option>Small team, limited budget</option><option>Dedicated retention agents</option><option>Full digital + human team</option></select>
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px">
+            <label>Key challenge or context (optional)</label>
+            <textarea id="ap-challenge" placeholder="e.g. New competitor launched cheaper SIM-only plans, high call failure rates in rural areas, surge in complaints after network outage…"></textarea>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-primary" onclick="generatePlan()">Generate action plan →</button>
+          </div>
+          <div class="output-box light" id="plan-output"><span class="output-placeholder" style="color:var(--muted)">Action plan will appear here…</span></div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </main>
+</div>
+
+<script>
+let API_KEY = '';
+const chatHistory = [];
+
+const CUSTOMERS = [
+  {name:'Brian Kelly',   type:'Pay-as-you-go',    value:480, risk:91, products:'Voice & Data', status:'Inactive'},
+  {name:'Aoife Murphy',  type:'Contract (annual)', value:720, risk:83, products:'Business bundle', status:'Active'},
+  {name:'Paul Doherty',  type:'Contract (monthly)',value:310, risk:77, products:'Voice & SMS',   status:'Active'},
+  {name:'Siobhan Grant', type:'Pay-as-you-go',    value:550, risk:74, products:'Data only',     status:'Inactive'},
+  {name:'Declan Walsh',  type:'Contract (monthly)',value:180, risk:68, products:'Voice & Data',  status:'Active'},
+];
+
+const FEATURES = [
+  {name:'Account Status',   pct:18.8},
+  {name:'Seconds of Use',   pct:13.6},
+  {name:'Call Frequency',   pct:13.6},
+  {name:'Complaint History',pct:12.7},
+  {name:'Customer Value',   pct: 9.4},
+  {name:'Call Failures',    pct: 8.1},
+];
+
+function initials(n){return n.split(' ').map(x=>x[0]).join('')}
+function riskColor(r){return r>=80?'var(--red)':r>=60?'var(--amber)':'var(--green)'}
+function riskBadgeClass(r){return r>=80?'badge-red':r>=60?'badge-amber':'badge-green'}
+
+function buildFeatureChart(){
+  const el = document.getElementById('feature-chart');
+  el.innerHTML = FEATURES.map(f=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid var(--sand2)">
+      <div style="font-size:13px;color:var(--ink);width:140px;flex-shrink:0">${f.name}</div>
+      <div style="flex:1;background:var(--sand2);border-radius:3px;height:6px;overflow:hidden">
+        <div style="height:100%;width:${(f.pct/20*100)}%;background:var(--navy);border-radius:3px;transition:width .6s"></div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted);width:38px;text-align:right">${f.pct}%</div>
+    </div>`).join('');
+}
+
+function buildWatchlist(){
+  const el = document.getElementById('watchlist-overview');
+  el.innerHTML = CUSTOMERS.map(c=>`
+    <div class="watchlist-item">
+      <div class="avatar">${initials(c.name)}</div>
+      <div class="customer-info">
+        <div class="customer-name">${c.name} <span class="badge ${riskBadgeClass(c.risk)}" style="margin-left:4px">${c.risk>=80?'High':c.risk>=60?'Medium':'Low'} risk</span></div>
+        <div class="customer-meta">${c.type} · £${c.value}/yr · ${c.status}</div>
+      </div>
+      <div class="risk-indicator">
+        <div class="risk-pct" style="color:${riskColor(c.risk)}">${c.risk}%</div>
+        <div class="risk-bar"><div class="risk-fill" style="width:${c.risk}%;background:${riskColor(c.risk)}"></div></div>
+      </div>
+    </div>`).join('');
+}
+
+function saveKey(){
+  const val = document.getElementById('api-key-input').value.trim();
+  if(!val){alert('Please enter an API key');return;}
+  API_KEY = val;
+  document.getElementById('api-modal').style.display = 'none';
+  document.getElementById('api-status-dot').classList.add('connected');
+  document.getElementById('api-status-text').textContent = 'API connected';
+}
+
+function switchPanel(id, btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  const titles = {overview:'Overview',risk:'Risk Scanner',email:'Retention Email',offer:'Offer Builder',chat:'AI Analyst',plan:'Action Plan'};
+  document.getElementById('topbar-title').textContent = titles[id]||id;
+}
+
+function requireKey(el){
+  if(!API_KEY){
+    el.textContent = '⚠ Connect an AI provider first — use the button at the bottom of the sidebar.';
+    return false;
+  }
+  return true;
+}
+
+const PROVIDERS = {
+  anthropic: {
+    label: 'Claude (Anthropic)',
+    placeholder: 'sk-ant-api03-…',
+    keyNote: '🔒 Get your key at console.anthropic.com',
+    call: async (key, messages, system) => {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': key,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: system,
+          messages: messages
+        })
+      });
+      if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||'Anthropic API error'); }
+      const d = await res.json();
+      return d.content?.map(b=>b.text||'').join('\n')||'No response.';
+    }
+  },
+  openai: {
+    label: 'GPT-4o (OpenAI)',
+    placeholder: 'sk-…',
+    keyNote: '🔒 Get your key at platform.openai.com/api-keys',
+    call: async (key, messages, system) => {
+      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+        body: JSON.stringify({
+          model: 'gpt-4o',
+          max_tokens: 1000,
+          messages: [{ role: 'system', content: system }, ...messages]
+        })
+      });
+      if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||'OpenAI API error'); }
+      const d = await res.json();
+      return d.choices?.[0]?.message?.content||'No response.';
+    }
+  },
+  gemini: {
+    label: 'Gemini 2.0 Flash-Lite (Google)',
+    placeholder: 'AIza…',
+    keyNote: '🔒 Free tier · Get your key at aistudio.google.com/app/apikey',
+    call: async (key, messages, system) => {
+      const contents = messages.map((m, i) => ({
+        role: m.role === 'assistant' ? 'model' : 'user',
+        parts: [{ text: i === 0 ? system + '\n\n' + m.content : m.content }]
+      }));
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents })
+      });
+      if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||'Gemini API error'); }
+      const d = await res.json();
+      return d.candidates?.[0]?.content?.parts?.[0]?.text||'No response.';
+    }
+  },
+  groq: {
+    label: 'Llama 3.3 (Groq)',
+    placeholder: 'gsk_…',
+    keyNote: '🔒 Get a free key at console.groq.com',
+    call: async (key, messages, system) => {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
+        body: JSON.stringify({
+          model: 'llama-3.3-70b-versatile',
+          max_tokens: 1000,
+          messages: [{ role: 'system', content: system }, ...messages]
+        })
+      });
+      if(!res.ok){ const e=await res.json(); throw new Error(e.error?.message||'Groq API error'); }
+      const d = await res.json();
+      return d.choices?.[0]?.message?.content||'No response.';
+    }
+  }
+};
+
+let ACTIVE_PROVIDER = 'anthropic';
+
+function selectProvider(id, btn){
+  ACTIVE_PROVIDER = id;
+  document.querySelectorAll('.provider-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const p = PROVIDERS[id];
+  document.getElementById('key-label').textContent = p.label + ' Key';
+  document.getElementById('api-key-input').placeholder = p.placeholder;
+  document.getElementById('key-note').innerHTML = p.keyNote;
+}
+
+function saveKey(){
+  const val = document.getElementById('api-key-input').value.trim();
+  if(!val){ alert('Please paste your API key'); return; }
+  API_KEY = val;
+  document.getElementById('api-modal').style.display = 'none';
+  document.getElementById('api-status-dot').classList.add('connected');
+  document.getElementById('api-status-text').textContent = PROVIDERS[ACTIVE_PROVIDER].label;
+}
+
+const DEFAULT_SYSTEM = 'You are an AI analyst for a large telecommunications company facing high customer churn. You help retention teams reduce subscriber churn through data-driven insights. Be specific, actionable, and practical for retention agents and account managers. Use telecom industry terminology.';
+
+async function callAI(prompt, system){
+  const provider = PROVIDERS[ACTIVE_PROVIDER];
+  return provider.call(API_KEY, [{role:'user', content:prompt}], system||DEFAULT_SYSTEM);
+}
+
+async function runRiskScan(){
+  const el = document.getElementById('risk-output');
+  if(!requireKey(el)) return;
+  const calls=document.getElementById('r-calls').value;
+  const complain=document.getElementById('r-complain').value;
+  const sublen=document.getElementById('r-sublen').value;
+  const status=document.getElementById('r-status').value;
+  const tariff=document.getElementById('r-tariff').value;
+  const value=document.getElementById('r-value').value;
+  const freq=document.getElementById('r-freq').value;
+  const age=document.getElementById('r-age').value;
+  const score = Math.min(97, Math.round(
+    (parseInt(calls)*2.2)+(parseInt(complain)*32)+(status==='2'?26:0)+
+    (tariff==='1'?9:0)+(Math.max(0,20-parseInt(freq))*0.4)+(Math.max(0,6-parseInt(age))*1.8)
+  ));
+  el.innerHTML = `<span class="spinner"></span>Scanning customer profile…`;
+  try{
+    const txt = await callAI(`Subscriber profile for telecom churn risk analysis:
+- Call failures this year: ${calls}
+- Filed complaint: ${complain==='1'?'Yes':'No'}
+- Subscription length: ${sublen} months
+- Account status: ${status==='1'?'Active':'Inactive'}
+- Tariff: ${tariff==='1'?'Pay-as-you-go':'Contract'}
+- Annual customer value: £${value}
+- Call frequency: ${freq}/yr
+- Age group: ${age}/5
+
+Calculated churn risk score: ${score}%
+
+Provide a structured assessment with:
+1. RISK LEVEL: One sentence verdict
+2. TOP RISK FACTORS: 3 specific reasons this subscriber is at risk (cite the actual data)
+3. IMMEDIATE ACTION: What should the retention agent do this week?
+4. CAUTION: One thing NOT to do with this subscriber
+
+Keep it concise and practical. Format clearly with the headers above.`);
+    renderOutput(el, txt, `Churn risk score: <strong>${score}%</strong>`);
+  }catch(e){ renderError(el, e); }
+}
+
+async function generateEmail(){
+  const el = document.getElementById('email-output');
+  if(!requireKey(el)) return;
+  const name=document.getElementById('e-name').value;
+  const type=document.getElementById('e-type').value;
+  const concern=document.getElementById('e-concern').value;
+  const risk=document.getElementById('e-risk').value;
+  const products=document.getElementById('e-products').value;
+  const branch=document.getElementById('e-branch').value;
+  const tone=document.getElementById('e-tone').value;
+  el.innerHTML = `<span class="spinner dark"></span>Drafting personalised email…`;
+  try{
+    const txt = await callAI(`Write a retention email for a telecommunications company to send to an at-risk subscriber.
+
+Subscriber: ${name} (${type})
+Their main concern: ${concern}
+Churn risk score: ${risk}%
+Services they use: ${products}
+Region: ${branch}
+Tone: ${tone}
+
+Requirements:
+- From a named retention account manager
+- Open by acknowledging their loyalty as a subscriber
+- Address their ${concern} concern directly with a concrete solution or offer
+- Include something tangible: a data boost, bill credit, plan upgrade, or priority support callback
+- Close with a direct line of contact (name + phone/email), not a generic sign-off
+- 150–200 words maximum
+- Must NOT feel like a mass marketing email
+
+Format: Subject line on first line, then blank line, then email body.`);
+    renderOutput(el, txt);
+  }catch(e){ renderError(el, e); }
+}
+
+async function buildOffer(){
+  const el = document.getElementById('offer-output');
+  if(!requireKey(el)) return;
+  const seg=document.getElementById('o-seg').value;
+  const reason=document.getElementById('o-reason').value;
+  const budget=document.getElementById('o-budget').value;
+  const branch=document.getElementById('o-branch').value;
+  el.innerHTML = `<span class="spinner dark"></span>Designing retention offer…`;
+  try{
+    const txt = await callAI(`Design a subscriber retention offer for a telecommunications company.
+
+Segment: ${seg}
+Churn reason: ${reason}
+Budget: ${budget}
+Region: ${branch}
+
+Design a complete offer package:
+
+OFFER CORE: What specifically is being offered (data GB, bill credit £, plan upgrade, free months — be exact)
+DELIVERY: Channel (outbound call, SMS, email, app notification), who delivers it, and when
+SUPPORTING ACTIONS: What else the retention agent should do alongside the offer
+SUCCESS METRIC: How we know it worked (what data point, what timeline)
+RISK PLAN: If they decline, what's the fallback?
+
+Reference real telecom products where relevant: voice minutes, data plans, roaming, SMS bundles, broadband add-ons, international calling.
+Be specific and implementable by a retention agent without a data science background.`);
+    renderOutput(el, txt);
+  }catch(e){ renderError(el, e); }
+}
+
+function setQ(txt){
+  document.getElementById('chat-input').value = txt;
+  document.getElementById('chat-input').focus();
+}
+
+async function sendChat(){
+  const input = document.getElementById('chat-input');
+  const win = document.getElementById('chat-window');
+  const msg = input.value.trim();
+  if(!msg) return;
+  const el = document.createElement('div');
+  if(!requireKey(el)){
+    win.innerHTML += `<div class="chat-msg msg-ai">${el.textContent}</div>`;
+    return;
+  }
+  chatHistory.push({role:'user',content:msg});
+  win.innerHTML += `<div class="chat-msg msg-user">${msg}</div>`;
+  input.value = '';
+  const typingId = 'typing-'+Date.now();
+  win.innerHTML += `<div class="chat-msg msg-ai" id="${typingId}"><span class="spinner dark"></span>Thinking…</div>`;
+  win.scrollTop = win.scrollHeight;
+  try{
+    const CHAT_SYSTEM = `You are an AI data analyst embedded in a large telecommunications company's churn retention system.
+Dataset: 3,150 subscribers, 15.7% churn rate (495 churned).
+Model: Random Forest, ROC-AUC 0.984, Recall 94.9%.
+Top predictors: Account status (18.8%), seconds of use (13.6%), call frequency (13.6%), complaints (12.7%), customer value (9.4%), call failures (8.1%).
+Churn is highest among: pay-as-you-go subscribers, inactive accounts, subscribers with complaints, low-usage subscribers.
+Telecom context: subscribers use voice, SMS, data, international calling. Competitors offer cheaper SIM-only and bundle deals.
+Be concise, practical, and data-grounded. Always translate insights into actions retention agents and account managers can take.`;
+    const reply = await PROVIDERS[ACTIVE_PROVIDER].call(API_KEY, chatHistory, CHAT_SYSTEM);
+    chatHistory.push({role:'assistant',content:reply});
+    document.getElementById(typingId).innerHTML = '<div class="md-body"><p>'+md(reply)+'</p></div>';
+  }catch(e){
+    const errEl = document.getElementById(typingId);
+    if(errEl) errEl.innerHTML = `<span style="color:var(--red)">⚠ ${e.message}${e.message?.toLowerCase().includes('fetch')||e.message?.toLowerCase().includes('network') ? ' — try another provider or serve via localhost' : ''}</span>`;
+  }
+  win.scrollTop = win.scrollHeight;
+}
+
+async function generatePlan(){
+  const el = document.getElementById('plan-output');
+  if(!requireKey(el)) return;
+  const horizon=document.getElementById('ap-horizon').value;
+  const focus=document.getElementById('ap-focus').value;
+  const res=document.getElementById('ap-res').value;
+  const challenge=document.getElementById('ap-challenge').value;
+  el.innerHTML = `<span class="spinner dark"></span>Building strategic plan…`;
+  try{
+    const txt = await callAI(`Create a subscriber retention action plan for a large telecommunications company.
+
+Time horizon: ${horizon}
+Subscriber focus: ${focus}
+Resources: ${res}
+Key challenge: ${challenge||'General churn reduction'}
+
+Dataset context:
+- 3,150 subscribers, 15.7% churn, 495 churned
+- Strongest predictors: account status, call failures, complaints, usage decline, pay-as-you-go tariff
+- Pay-as-you-go subscribers churn significantly more than contract subscribers
+- ML model can produce weekly at-risk subscriber lists for the retention team
+
+Structure the plan with:
+1. PRIORITY ACTIONS — numbered list, each with: action, owner (role), deadline, expected impact
+2. AI/AUTOMATION TASKS — how to use the ML model in day-to-day retention operations
+3. CRM INTEGRATION — specific data points and triggers to embed in the CRM system
+4. KPIs TO TRACK — 3–4 measurable metrics with target values
+5. THIS WEEK'S QUICK WIN — one thing the retention team can do in the next 5 working days
+
+Keep it implementable. Every item must be specific to a telecom retention context — no generic advice.`);
+    renderOutput(el, txt);
+  }catch(e){ renderError(el, e); }
+}
+
+document.getElementById('chat-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)) sendChat();
+});
+
+buildFeatureChart();
+buildWatchlist();
+
+function renderError(el, e){
+  const msg = e.message || String(e);
+  const isCors = msg.toLowerCase().includes('fetch') || msg.toLowerCase().includes('network') || msg.toLowerCase().includes('failed');
+  const provider = PROVIDERS[ACTIVE_PROVIDER]?.label || 'the AI provider';
+  el.className = 'output-box md-output';
+  el.innerHTML = `<div class="score-header" style="background:#7f1d1d">
+    ⚠ Request failed
+  </div>
+  <div class="md-body">
+    <p><strong>Error:</strong> ${msg}</p>
+    ${isCors ? `
+    <p>This is likely a <strong>CORS / network error</strong>. When opening the file directly from your computer (<code>file://</code>), some AI providers block browser requests.</p>
+    <p><strong>Fix — pick one:</strong></p>
+    <ul>
+      <li class="ul-item"><span class="li-bull">—</span><span><strong>Use any other provider</strong> — it explicitly allows browser calls with the <code>anthropic-dangerous-direct-browser-access</code> header. Switch provider in the sidebar.</span></li>
+      <li class="ul-item"><span class="li-bull">—</span><span><strong>Use a local server</strong> — run <code>python -m http.server 8080</code> in the project folder, then open <code>http://localhost:8080/frontend/index.html</code></span></li>
+      <li class="ul-item"><span class="li-bull">—</span><span><strong>Deploy to GitHub Pages</strong> — push to GitHub, enable Pages, and all providers will work from an <code>https://</code> URL.</span></li>
+    </ul>` : ''}
+  </div>`;
+}
+
+function md(text){
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^#{3}\s+(.+)$/gm,'<h3>$1</h3>')
+    .replace(/^#{2}\s+(.+)$/gm,'<h2>$1</h2>')
+    .replace(/^#{1}\s+(.+)$/gm,'<h1>$1</h1>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g,'<em>$1</em>')
+    .replace(/`(.+?)`/g,'<code>$1</code>')
+    .replace(/^---+$/gm,'<hr>')
+    .replace(/^(\d+)\.\s+(.+)$/gm,'<li class="ol-item"><span class="li-num">$1</span><span>$2</span></li>')
+    .replace(/^[-•]\s+(.+)$/gm,'<li class="ul-item"><span class="li-bull">—</span><span>$1</span></li>')
+    .replace(/(<\/li>\n?)(<li)/g,'$1$2')
+    .replace(/(<li class="ol-item">[\s\S]*?<\/li>)(?!\s*<li class="ol-item">)/g,'<ol>$1</ol>')
+    .replace(/(<li class="ul-item">[\s\S]*?<\/li>)(?!\s*<li class="ul-item">)/g,'<ul>$1</ul>')
+    .replace(/\n{2,}/g,'</p><p>')
+    .replace(/\n/g,'<br>')
+    .replace(/^(?!<[houpc]|<li|<hr)(.+)$/gm, (m) => m.startsWith('<') ? m : m)
+    .replace(/^<\/p><p>(<h[123]|<hr|<ol|<ul)/gm,'$1')
+    .replace(/(<\/h[123]>|<\/ol>|<\/ul>|<hr>)<\/p>/gm,'$1');
+}
+
+function renderOutput(el, text, scoreHeader){
+  el.className = 'output-box md-output';
+  const header = scoreHeader ? `<div class="score-header">${scoreHeader}</div>` : '';
+  el.innerHTML = header + '<div class="md-body"><p>' + md(text) + '</p></div>';
+}
+</script>
+</body>
+</html>
