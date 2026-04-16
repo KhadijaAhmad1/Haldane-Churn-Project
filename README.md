@@ -1,10 +1,5 @@
 # Telecom Customer Churn Prediction & AI Retention System
 
-> **KTP Associate Recruitment Project**  
-> Haldane Group Limited × Queen's University Belfast  
-> Role: AI & Data Analyst – KTP Associate (ref: 26/113195)
-
----
 
 ## Project Overview
 
